@@ -4,6 +4,9 @@
  * Reads extracted decisions from stdin (JSON), writes them to GBrain pages.
  */
 
+import { execSync as childExecSync } from 'child_process';
+import { writeFileSync } from 'fs';
+
 interface Decision {
   commit: string;
   date: string;
@@ -16,8 +19,7 @@ interface Decision {
 const GBRAIN = '/home/rclzen/.openclaw/workspace/skills/gbrain/bin/gbrain';
 
 function execSync(cmd: string): string {
-  const { execSync: _exec } = require('child_process');
-  return _exec(cmd, { encoding: 'utf-8' });
+  return childExecSync(cmd, { encoding: 'utf-8' });
 }
 
 function shortHash(hash: string): string {
@@ -112,7 +114,7 @@ async function main() {
     try {
       // Write the page via gbrain
       const tmpFile = `/tmp/gbrain_page_${Date.now()}.md`;
-      require('fs').writeFileSync(tmpFile, page);
+      writeFileSync(tmpFile, page);
 
       execSync(`${GBRAIN} put "${slug}" < "${tmpFile}"`);
       console.error(`[CREATED] ${slug}`);
