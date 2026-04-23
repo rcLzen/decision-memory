@@ -5,6 +5,8 @@
  * Uses GBrain query to find relevant decision pages, then synthesizes via LLM.
  */
 
+import { execSync as childExecSync } from 'child_process';
+
 const GBRAIN = '/home/rclzen/.openclaw/workspace/skills/gbrain/bin/gbrain';
 
 interface GbrainResult {
@@ -14,8 +16,7 @@ interface GbrainResult {
 }
 
 function execSync(cmd: string): string {
-  const { execSync: _exec } = require('child_process');
-  return _exec(cmd, { encoding: 'utf-8' });
+  return childExecSync(cmd, { encoding: 'utf-8' });
 }
 
 function gbrainQuery(question: string, limit = 10): GbrainResult[] {
